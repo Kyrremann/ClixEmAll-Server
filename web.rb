@@ -1,8 +1,7 @@
 require 'sinatra'
 require 'rubygems'
 require 'git'
-require 'logger' 
-require 'json'
+require 'logger'
 
 get '/' do
   "Hello, world"
@@ -10,8 +9,9 @@ end
 
 get '/set/:name' do | name |
   # push JSON set to user
-  "Hello #{name}!"
-  send_file "#{name}.json"
+  p "Hello #{name}!"
+  p "Sending file #{name}.json"
+  send_file "assets/#{name}.json"
 end
 
 get '/set/:name/:version' do | name, version |
