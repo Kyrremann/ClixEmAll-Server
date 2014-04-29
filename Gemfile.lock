@@ -1,6 +1,9 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    git (1.2.6)
+    json (1.8.1)
+    logger (1.2.8)
     rack (1.5.2)
     sinatra (1.1.0)
       rack (~> 1.1)
@@ -11,4 +14,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  git (= 1.2.6)
+  json (= 1.8.1)
+  logger (= 1.2.8)
   sinatra (= 1.1.0)
