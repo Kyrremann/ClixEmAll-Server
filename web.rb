@@ -25,8 +25,8 @@ get '/set/:name/:version' do | name, version |
     if set_version.to_i < version.to_i then
       redirect "/set/#{name}"
     end
-    "No changes in set"
+    "No changes in set #{name}"
   else
-    "Set does not have a version"
+    "#{name} does not have a version"
   end
 end
