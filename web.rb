@@ -13,7 +13,7 @@ get '/set/versions' do
   Dir.glob("assets/*.json") do | file |
     json = JSON.parse(File.read(file))
     filename = File.basename("#{file}", ".json")
-    versions += "{\"#{filename}\":\"#{json["version"]}\","
+    versions += "{\"#{filename}\":#{json["version"]},"
   end
   
   versions = versions[0...-1]
