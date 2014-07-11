@@ -1,0 +1,50 @@
+!!!
+%html
+  %head
+    %title Clix 'em All
+  %body
+    %a{:href => '/'}
+      Home
+    %p
+      Here you can add a new clix
+    - if locals["success"] then
+      %h2
+        = locals["success"]
+
+    %form{:action => "/add/clix", :method => "post"}
+      %label{:for => "set"}
+        Select set (not sorted)
+      %br
+      %select{:id => "set", :name => "set" }
+        %option{:value => "empty"}
+          Choose
+        - getSetSelect.each do | key, value |
+          %option{:value => key, :selected => params["set"] == key}
+            = value
+      %br
+      %label{:for => "id"}
+        ID (remeber the starting 0, S, R, or other identifiers)
+      %br
+      %input{:id => "id", :name => "id", :value => params["id"]}
+      %br
+      %label{:for => "name"}
+        Name
+      %br
+      %input{:id => "name", :name => "name", :value => params["name"]}
+      %br
+      %label{:for => "ta"}
+        Team ability (need to be seperated with a comma ',')
+      %br
+      %input{:id => "ta", :name => "ta", :value => params["ta"]}
+      %br      
+      %label{:for => "keywords"}
+        Keywords (need to be seperated with a comma ',')
+      %br
+      %input{:id => "keywords", :name => "keywords", :value => params["keywords"]}
+      %br      
+      %label{:for => "points"}
+        Points (separate starting points with a |. Ex. 150|75)
+      %br
+      %input{:id => "points", :name => "points", :value => params["points"]}
+      %br
+      %input{:type => "submit"}
