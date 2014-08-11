@@ -54,9 +54,13 @@ post '/add/clix' do
   if params["set"] == "empty" || params["id"] == "" || params["name"] == "" || params["points"] == "" then
     haml :add_clix, :locals => params
   else
-    #params = {}
-    #params["success"] = "Clix added"
-    #haml :add_clix, :locals => params
+    filename = "assets/#{params["set"]}.json"
+    jsonFile = File.read(filename)
+    json = JSON.parse(jsonFile)
+    json[params["id"]] = {:name => params["name"], :keywords => params["keywords"], :team_ability => [params["ta"]], :points => params["points"]}
+    File.open(filename, 'w') do | output |
+      output.write(JSON.generate(json))
+    end
     redirect '/add/clix?success=true'
   end
 end
