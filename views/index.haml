@@ -2,12 +2,19 @@
 %html
   %head
     %title Clix 'em All
+    %meta{'http-equiv' => "Content-Type", :content => "text/html; charset=utf-8"}
+    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1"}
+    %link(rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css")
+    %link(rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css")
+    %link(rel="stylesheet" href="/css/style.css")
   %body
-    %p
-      On this site you can register clix that are missing in a set.
-      %br
-      %br
-      Later on you can register new sets, and edit already added figures
-      %br
-      %a{:href => "/add/clix"}
-        Add new figure
+    = haml :'templates/nav'
+    .container
+      %p
+        On this site you can register clix that are missing in a set.
+        %br
+        %br
+        Later on you can register new sets, and edit already added figures
+        %br
+        %a{:href => "/add/clix"}
+          Add new figure

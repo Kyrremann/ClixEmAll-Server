@@ -2,49 +2,63 @@
 %html
   %head
     %title Clix 'em All
+    %meta{'http-equiv' => "Content-Type", :content => "text/html; charset=utf-8"}
+    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1"}
+    %link(rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css")
+    %link(rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css")
+    %link(rel="stylesheet" href="/css/style.css")
   %body
-    %a{:href => '/'}
-      Home
-    %p
-      Here you can add a new clix
-    - if locals["success"] then
-      %h2
-        = locals["success"]
-
-    %form{:action => "/add/clix", :method => "post"}
-      %label{:for => "set"}
-        Select set (not sorted)
-      %br
-      %select{:id => "set", :name => "set" }
-        %option{:value => "empty"}
-          Choose
-        - getSetSelect.each do | key, value |
-          %option{:value => key, :selected => params["set"] == key}
-            = value
-      %br
-      %label{:for => "id"}
-        ID (remeber the starting 0, S, R, or other identifiers)
-      %br
-      %input{:id => "id", :name => "id", :value => params["id"]}
-      %br
-      %label{:for => "name"}
-        Name
-      %br
-      %input{:id => "name", :name => "name", :value => params["name"]}
-      %br
-      %label{:for => "ta"}
-        Team ability (need to be seperated with a comma ',')
-      %br
-      %input{:id => "ta", :name => "ta", :value => params["ta"]}
-      %br      
-      %label{:for => "keywords"}
-        Keywords (need to be seperated with a comma ',')
-      %br
-      %input{:id => "keywords", :name => "keywords", :value => params["keywords"]}
-      %br      
-      %label{:for => "points"}
-        Points (separate starting points with a |. Ex. 150|75)
-      %br
-      %input{:id => "points", :name => "points", :value => params["points"]}
-      %br
-      %input{:type => "submit"}
+    = haml :'templates/nav'
+    .container
+      %form.form-horizontal{:action => "/add/clix", :method => "post"}
+        %fieldset
+          / Form Name
+          %legend Here you can add a new clix
+          / Select Basic
+          - if locals["success"] then
+            %h2
+              = locals["success"]
+          .control-group
+            %label.control-label{:for => "selectbasic"} Set
+            .controls
+              %select#selectbasic.input-xlarge{:name => "selectbasic"}
+                %option{:value => "empty"}
+                  Choose
+                - getSetSelect.each do | key, value |
+                  %option{:value => key, :selected => params["set"] == key}
+                    = value
+          / Text input
+          .control-group
+            %label.control-label{:for => "id"} Figure id
+            .controls
+              %input#id.input-xlarge{:name => "id", :placeholder => "001", :required => "", :type => "text"}
+                %p.help-block Remeber the starting 0, S, R, or other identifiers
+          / Text input
+          .control-group
+            %label.control-label{:for => "name"} Name
+            .controls
+              %input#name.input-xlarge{:name => "name", :placeholder => "Spider-Man", :required => "", :type => "text"}
+          / Text input
+          .control-group
+            %label.control-label{:for => "ta"} Team ability
+            .controls
+              %input#ta.input-xlarge{:name => "ta", :placeholder => "Spider-Man", :required => "", :type => "text"}
+                %p.help-block Need to be seperated with a comma ','
+          / Text input
+          .control-group
+            %label.control-label{:for => "keywords"} Keywords
+            .controls
+              %input#keywords.input-xlarge{:name => "keywords", :placeholder => "Avengers, Reporter, Scientist, Spider-Man Family", :required => "", :type => "text"}
+                %p.help-block Need to be seperated with a comma ','
+          / Text input
+          .control-group
+            %label.control-label{:for => "points"} Points
+            .controls
+              %input#points.input-xlarge{:name => "points", :placeholder => "100", :required => "", :type => "text"}
+                %p.help-block Separate starting points with a |. Ex. 150|75
+          / Button (Double)
+          .control-group
+            %label.control-label{:for => "submit"}
+            .controls
+              %button#submit.btn.btn-success{:name => "submit"} Submit
+              %button#clear.btn.btn-danger{:name => "clear"} Clear
