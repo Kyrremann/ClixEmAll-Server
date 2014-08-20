@@ -57,7 +57,7 @@ post '/add/clix' do
     filename = "assets/#{params["set"]}.json"
     jsonFile = File.read(filename)
     json = JSON.parse(jsonFile)
-    json[params["id"]] = {:name => params["name"], :keywords => params["keywords"], :team_ability => [params["ta"]], :points => params["points"]}
+    json[params["id"]] = {:name => params["name"], :keywords => params["keywords"], :team_ability => params["ta"].split(","), :points => params["points"]}
     json["version"] = json["version"] + 1
     File.open(filename, 'w') do | output |
       output.write(JSON.generate(json))
