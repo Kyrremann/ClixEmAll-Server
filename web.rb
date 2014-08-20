@@ -1,11 +1,10 @@
 require 'sinatra'
 require 'rubygems'
-require 'git'
-require 'logger'
+require 'haml'
 require 'json'
 
 get '/' do
-  "Hello, world"
+  haml :index
 end
 
 get '/set/versions' do
@@ -41,4 +40,39 @@ get '/set/:name/:version' do | name, version |
   else
     "#{name} does not have a version"
   end
+end
+
+get '/add/clix' do
+  if params[:success] then
+    haml :add_clix, :locals => {"success" => "Clix added"}
+  else 
+    haml :add_clix
+  end  
+end
+
+post '/add/clix' do
+  if params["set"] == "empty" || params["id"] == "" || params["name"] == "" || params["points"] == "" then
+    haml :add_clix, :locals => params
+  else
+    filename = "assets/#{params["set"]}.json"
+    jsonFile = File.read(filename)
+    json = JSON.parse(jsonFile)
+    json[params["id"]] = {:name => params["name"], :keywords => params["keywords"], :team_ability => [params["ta"]], :points => params["points"]}
+    json["version"] = json["version"] + 1
+    File.open(filename, 'w') do | output |
+      output.write(JSON.generate(json))
+    end
+    redirect '/add/clix?success=true'
+  end
+end
+
+def getSetSelect()
+  titles = {}
+  Dir.glob("assets/*.json") do | file |
+    json = JSON.parse(File.read(file))
+    filename = File.basename("#{file}", ".json")
+    titles[filename] = json["set_title"]
+  end
+
+  titles
 end
