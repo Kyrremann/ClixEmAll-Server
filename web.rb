@@ -2,9 +2,52 @@ require 'sinatra'
 require 'rubygems'
 require 'haml'
 require 'json'
+require 'rufus-scheduler'
+require 'rest_client'
+
+require_relative 'libs/DatabaseHandler.rb'
+require_relative 'libs/Scheduler.rb'
+
+unless CLOUDANT_URL = ENV['CLOUDANT_URL']
+  raise "You must specify the CLOUDANT_URL env variable"
+end
+
+$DB_URL = "#{ENV['CLOUDANT_URL']}"
 
 get '/' do
   haml :index
+end
+
+get '/start' do
+  all = "{\"sets\":["
+  Dir.glob("assets/*.json") do | file |
+    json = JSON.parse(File.read(file))
+    filename = File.basename("#{file}", ".json")
+    all += "{\"file\":\"#{filename}\","
+    all += "\"cloudant_id\":0,"
+    all += "\"title\":\"#{json["set_title"]}\""
+    all += "},"
+  end
+  all = all[0...-1]
+  all += "]}"
+  haml all
+end
+
+get '/phase2' do
+  sets = get_list_of_sets
+  Dir.glob("assets/*.json") do | file |
+    json = JSON.parse(File.read(file))
+    rev, id = save_to_cloudant(json.to_json)
+
+    sets["sets"].each do | set |
+      if File.basename("#{file}", ".json") == set["file"] then
+        set["id"] = id
+        set["rev"] = rev
+      end
+    end
+  end
+
+  save_list_of_sets(sets.to_json)
 end
 
 get '/set/versions' do
