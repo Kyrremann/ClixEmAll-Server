@@ -13,53 +13,25 @@ unless CLOUDANT_URL = ENV['CLOUDANT_URL']
 end
 
 $DB_URL = "#{ENV['CLOUDANT_URL']}"
+$SETS = {}
+
+get_list_of_sets["sets"].each do | set |
+	$SETS[set["file"]] = load_from_cloudant(set["id"])
+end
+p "Server is up and running"
 
 get '/' do
   haml :index
 end
 
-get '/start' do
-  all = "{\"sets\":["
-  Dir.glob("assets/*.json") do | file |
-    json = JSON.parse(File.read(file))
-    filename = File.basename("#{file}", ".json")
-    all += "{\"file\":\"#{filename}\","
-    all += "\"cloudant_id\":0,"
-    all += "\"title\":\"#{json["set_title"]}\""
-    all += "},"
-  end
-  all = all[0...-1]
-  all += "]}"
-  haml all
-end
-
-get '/phase2' do
-  sets = get_list_of_sets
-  Dir.glob("assets/*.json") do | file |
-    json = JSON.parse(File.read(file))
-    rev, id = save_to_cloudant(json.to_json)
-
-    sets["sets"].each do | set |
-      if File.basename("#{file}", ".json") == set["file"] then
-        set["id"] = id
-        set["rev"] = rev
-      end
-    end
-  end
-
-  save_list_of_sets(sets.to_json)
-end
-
 get '/set/versions' do
-  versions = "{"
-  Dir.glob("assets/*.json") do | file |
-    json = JSON.parse(File.read(file))
-    filename = File.basename("#{file}", ".json")
-    versions += "\"#{filename}\":#{json["version"]},"
-  end
-  
-  versions = versions[0...-1]
-  return versions += "}"
+  	versions = "{"
+	get_list_of_sets["sets"].each do | set |
+		json = $SETS[set["file"]]
+    	versions += "\"#{set["file"]}\":#{json["version"]},"
+	end
+	versions = versions[0...-1]
+	return versions += "}"
 end
 
 get '/set/:name' do | name |
